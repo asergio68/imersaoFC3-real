@@ -62,8 +62,8 @@ func (t *TransactionRepositoryDb) UpdateCreditCardBalance(creditCard domain.Cred
 func (t *TransactionRepositoryDb) CreateCreditCard(creditCard domain.CreditCard) error {
 	stmt, err := t.db.Prepare(
 		`insert into credit_cards (id, name, number, expiration_month, expiration_year, cvv, balance,
-				limit, created_at)
-			values ($1,$2,$3,$4,$5,$6,$7,$8,$9)`)
+			balance_limit)
+			values ($1,$2,$3,$4,$5,$6,$7,$8)`)
 	if err != nil{
 		return err
 	}
@@ -77,7 +77,6 @@ func (t *TransactionRepositoryDb) CreateCreditCard(creditCard domain.CreditCard)
 		creditCard.CVV,
 		creditCard.Balance,
 		creditCard.Limit,
-		creditCard.CreatedAt,
 	)
 	if err != nil{
 		return err
