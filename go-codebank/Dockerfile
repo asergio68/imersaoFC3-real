@@ -1,4 +1,4 @@
-FROM golang:1.16.0-stretch
+FROM golang:1.15
 
 WORKDIR /go/src
 ENV PATH="/go/bin:${PATH}"
@@ -13,6 +13,5 @@ RUN apt-get update && \
     wget https://github.com/ktr0731/evans/releases/download/0.9.1/evans_linux_amd64.tar.gz && \
     tar -xzvf evans_linux_amd64.tar.gz && \
     mv evans ../bin && rm -f evans_linux_amd64.tar.gz
-
 
 CMD ["tail","-f","/dev/null"]

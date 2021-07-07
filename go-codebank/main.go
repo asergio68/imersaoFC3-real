@@ -4,17 +4,71 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/asergio68/imersaoFC3-real/go-codebank/domain"
+	"github.com/asergio68/imersaoFC3-real/go-codebank/infrastructure/grpc/server"
+	"github.com/asergio68/imersaoFC3-real/go-codebank/infrastructure/kafka"
 	"github.com/asergio68/imersaoFC3-real/go-codebank/infrastructure/repository"
 	"github.com/asergio68/imersaoFC3-real/go-codebank/usecase"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
+
+func init() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("error loading .env file")
+	}
+}
 
 func main() {
 	db := setupDb()
 	defer db.Close()
 
+	// CreateAndSaveCC(db)
+
+	producer := setupKafkaProducer()
+	trUseCase := setupTransactionUseCase(db, producer)
+	serveGRPC(trUseCase)
+}
+
+func serveGRPC(trUseCase usecase.UseCaseTransaction) {
+	gServer := server.NewGRPCServer();
+	gServer.ProcessTransactionUseCase = trUseCase
+	fmt.Println("subindo o servidor grpc...")
+	gServer.Serve()
+}
+func setupTransactionUseCase(db *sql.DB, producer kafka.KafkaProducer) usecase.UseCaseTransaction {
+	transactionRepository := repository.NewTransactionRepositoryDb(db)
+	useCase := usecase.NewUseCaseTransaction(transactionRepository)
+	useCase.KafkaProducer = producer
+	return useCase
+}
+
+func setupKafkaProducer() kafka.KafkaProducer {
+	producer := kafka.NewKafkaProducer()
+	producer.SetupProducer(os.Getenv("KafkaBootstrapServers"))
+	return producer
+}
+
+func setupDb() *sql.DB {
+	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		os.Getenv("host"),
+		os.Getenv("port"),
+		os.Getenv("user"),
+		os.Getenv("password"),
+		os.Getenv("dbname"),
+	)
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		log.Fatal("error connection to database")
+	}
+	return db
+}
+
+func CreateAndSaveCC(db *sql.DB) {
+	
 	cc := domain.NewCreditCard()
 	cc.Number = "1234"
 	cc.Name = "Wesley"
@@ -29,25 +83,4 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-}
-
-func setupTransactionUseCase(db *sql.DB) usecase.UseCaseTransaction {
-	transactionRepository := repository.NewTransactionRepositoryDb(db)
-	useCase := usecase.NewUseCaseTransaction(transactionRepository)
-	return useCase
-}
-
-func setupDb() *sql.DB {
-	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		"db",
-		"5432",
-		"postgres",
-		"root",
-		"codebank",
-	)
-	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		log.Fatal("error connection to database")
-	}
-	return db
 }
