@@ -4,8 +4,8 @@ import { Product } from 'src/products/entities/product.entity';
 import { Connection, In, Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { Order } from './entities/order.entity';
-// import { PaymentService } from './payment/payment.service';
+import { Order, OrderStatus } from './entities/order.entity';
+import { PaymentService } from './payment/payment.service';
 // import { validate as uuidValidate } from 'uuid';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class OrdersService {
   constructor(
     @InjectRepository(Order) private orderRepo: Repository<Order>,
     @InjectRepository(Product) private productRepo: Repository<Product>,
-    // private paymentService: PaymentService,
+    private paymentService: PaymentService,
     private connection: Connection,
   ) {}
 
@@ -33,42 +33,40 @@ export class OrdersService {
       item.price = product.price;
     });
 
-    return this.orderRepo.save(order);
+    const queryRunner = this.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    // const queryRunner = this.connection.createQueryRunner();
-    // await queryRunner.connect();
-    // await queryRunner.startTransaction();
-
-    // try {
-    //   const newOrder = await queryRunner.manager.save(order);
-    //   await this.paymentService.payment({
-    //     creditCard: {
-    //       name: order.credit_card.name,
-    //       number: order.credit_card.number,
-    //       expirationMonth: order.credit_card.expiration_month,
-    //       expirationYear: order.credit_card.expiration_year,
-    //       cvv: order.credit_card.cvv,
-    //     },
-    //     amount: order.total,
-    //     store: process.env.STORE_NAME,
-    //     description: `Produtos: ${products.map((p) => p.name).join(', ')}`,
-    //   });
-    //   await queryRunner.manager.update(
-    //     Order,
-    //     { id: newOrder.id },
-    //     {
-    //       status: OrderStatus.Approved,
-    //     },
-    //   );
-    //   queryRunner.commitTransaction();
-    //   return this.orderRepo.findOne(newOrder.id, { relations: ['items'] });
-    // } catch (e) {
-    //   await queryRunner.rollbackTransaction();
-    //   console.log(e.name);
-    //   throw e;
-    // } finally {
-    //   await queryRunner.release();
-    // }
+    try {
+      const newOrder = await queryRunner.manager.save(order);
+      await this.paymentService.payment({
+        creditCard: {
+          name: order.credit_card.name,
+          number: order.credit_card.number,
+          expirationMonth: order.credit_card.expiration_month,
+          expirationYear: order.credit_card.expiration_year,
+          cvv: order.credit_card.cvv,
+        },
+        amount: order.total,
+        store: process.env.STORE_NAME,
+        description: `Produtos: ${products.map((p) => p.name).join(', ')}`,
+      });
+      await queryRunner.manager.update(
+        Order,
+        { id: newOrder.id },
+        {
+          status: OrderStatus.Approved,
+        },
+      );
+      queryRunner.commitTransaction();
+      return this.orderRepo.findOne(newOrder.id, { relations: ['items'] });
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      console.log(e.name);
+      throw e;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async findAll() {

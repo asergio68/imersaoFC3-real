@@ -50,7 +50,7 @@ Content-Type: application/json
        "items":  [
       {
           "quantity": 2, 
-          "product_id": "fa1198b0-4a38-4f04-8845-8c88b91f28ec"
+          "product_id": "f75f3407-7dad-4482-a954-486bc5906afd"
       }
    ]
 }
