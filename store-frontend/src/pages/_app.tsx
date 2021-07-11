@@ -7,17 +7,20 @@ import {
 } from "@material-ui/core";
 import theme from "../theme";
 import Navbar from "../components/Navbar";
+import { SnackbarProvider } from "notistack";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <MuiThemeProvider theme={theme}>
-      <CssBaseline />
-      <Navbar />
-      <Container>
-        <Box marginTop={1} marginBottom={1}>
-          <Component {...pageProps} />
-        </Box>
-      </Container>
+      <SnackbarProvider>
+        <CssBaseline />
+        <Navbar />
+        <Container>
+          <Box marginTop={1} marginBottom={1}>
+            <Component {...pageProps} />
+          </Box>
+        </Container>
+      </SnackbarProvider>
     </MuiThemeProvider>
   );
 }

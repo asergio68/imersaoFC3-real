@@ -30,9 +30,9 @@ export class PaymentService implements OnModuleInit {
       this.clientGrpc.getService<PaymentGrpcService>('PaymentService');
   }
 
-  payment(data: PaymentData) {
+  async payment(data: PaymentData) {
     try {
-      return this.paymentGrpcService.payment(data).toPromise();
+      return await this.paymentGrpcService.payment(data).toPromise();
     } catch (e) {
       throw new RpcException({
         code: e.code,

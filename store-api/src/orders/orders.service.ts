@@ -32,7 +32,6 @@ export class OrdersService {
       );
       item.price = product.price;
     });
-
     const queryRunner = this.connection.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -58,7 +57,7 @@ export class OrdersService {
           status: OrderStatus.Approved,
         },
       );
-      queryRunner.commitTransaction();
+      await queryRunner.commitTransaction();
       return this.orderRepo.findOne(newOrder.id, { relations: ['items'] });
     } catch (e) {
       await queryRunner.rollbackTransaction();

@@ -32,7 +32,7 @@ DELETE http://localhost:3000/products/tv-50
 GET http://localhost:3000/orders
 
 ###
-GET http://localhost:3000/orders/64be9c0d-0079-442b-8bd7-2de24c1cf322
+GET http://localhost:3000/orders/db5c3193-7775-478c-af95-40f842df4269
 
 
 ###
@@ -41,10 +41,10 @@ Content-Type: application/json
 
 {
     "credit_card": {
-      "number": "1111111111111103",
-      "name": "Luiz carlos",
-      "expiration_month": 7,
-      "expiration_year": 2021,
+      "number": "1234567890123456",
+      "name": "Wesley",
+      "expiration_month": 8,
+      "expiration_year": 2029,
       "cvv": "123"
     },
        "items":  [
