@@ -1,72 +1,17 @@
-GET http://localhost:3000/products
+###
+GET http://localhost:3002/credit-cards
+
 
 ###
-GET http://localhost:3000/products/tv-32
-
-###
-POST http://localhost:3000/products
+POST http://localhost:3002/credit-cards
 Content-Type: application/json
 
 {
-    "name": "tv 50",
-    "description": "Mussum Ipsum, cacilds vidis litro abertis. Posuere libero varius. Nullam a nisl ut ante blandit hendrerit. Aenean sit amet nisi. In elementis mé pra quem é amistosis quis leo. Interessantiss quisso pudia ce receita de bolis, mais bolis eu num gostis. Cevadis im ampola pa arma uma pindureta.",
-    "image_url": "https://images.unsplash.com/photo-1570831739435-6601aa3fa4fb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjIzMzQ0NjY2&ixlib=rb-1.2.1&q=80&w=1080&utm_source=unsplash_source&utm_medium=referral&utm_campaign=api-credit",
-    "price": 4000.00
+    "name": "Sergio Ribeiro",
+    "number": "1234567890123456"
 }
 
-###
-PATCH http://localhost:3000/products/tv-32
-Content-Type: application/json
-
-{
-    "name": "tv 32",
-    "price": 1500.37
-}
+## 1111111111111103
 
 ###
-DELETE http://localhost:3000/products/tv-50
-
-## ORDERS ####
-
-###
-GET http://localhost:3000/orders
-
-###
-GET http://localhost:3000/orders/db5c3193-7775-478c-af95-40f842df4269
-
-
-###
-POST http://localhost:3000/orders
-Content-Type: application/json
-
-{
-    "credit_card": {
-      "number": "1234567890123456",
-      "name": "Wesley",
-      "expiration_month": 8,
-      "expiration_year": 2029,
-      "cvv": "123"
-    },
-       "items":  [
-      {
-          "quantity": 2, 
-          "product_id": "f75f3407-7dad-4482-a954-486bc5906afd"
-      }
-   ]
-}
-
-# {
-#    "credit_card": {
-#       "number": "1111111111111103",
-#       "name": "Luiz carlos",
-#       "expiration_month": 6,
-#       "expiration_year": 2021,
-#       "cvv": "123"
-#    },
-#    "items":  [
-#       {
-#           "quantity": 2, 
-#           "product_id": "8ea4791a-9534-4f45-b172-f22a7e2b90c3"
-#       }
-#    ]
-# }
+GET http://localhost:3002/credit-cards/1111111111111103/invoices

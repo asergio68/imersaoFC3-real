@@ -3,8 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ProductsModule } from './products/products.module';
-import { OrdersModule } from './orders/orders.module';
+import { InvoicesModule } from './invoices/invoices.module';
 
 @Module({
   imports: [
@@ -18,8 +17,7 @@ import { OrdersModule } from './orders/orders.module';
       database: process.env.TYPEORM_DATABASE,
       entities: [process.env.TYPEORM_ENTITIES],
     }),
-    ProductsModule,
-    OrdersModule,
+    InvoicesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

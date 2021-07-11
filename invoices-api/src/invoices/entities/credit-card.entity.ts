@@ -1,3 +1,4 @@
+import { Exclude, Expose } from 'class-transformer';
 import {
   BeforeInsert,
   Column,
@@ -6,44 +7,27 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import slugify from 'slugify';
 
-@Entity({ name: 'products' }) //nome da tabela
-export class Product {
+@Exclude()
+@Entity({ name: 'credit_cards' })
+export class CreditCard {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   name: string;
 
+  @Expose()
   @Column()
-  description: string;
-
-  @Column()
-  image_url: string;
-
-  @Column()
-  slug: string;
-
-  @Column()
-  price: number;
+  number: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
-  @BeforeInsert()
-  generateId() {
+  @BeforeInsert() generateId() {
     if (this.id) {
       return;
     }
     this.id = uuidv4();
-  }
-
-  @BeforeInsert()
-  generateSlug() {
-    if (this.slug) {
-      return;
-    }
-    this.slug = slugify(this.name);
   }
 }

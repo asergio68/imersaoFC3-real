@@ -1,12 +1,12 @@
 version: '3'
 
 services:
-  store-api:
+  invoices-api:
     build: .
     entrypoint: dockerize -wait tcp://db:5432 -timeout 40s ./.docker/entrypoint.sh
-    container_name: store-api
+    container_name: invoices-api
     ports:
-      - 3000:3000
+      - 3002:3000
     volumes:
       - .:/home/node/app
     extra_hosts:
@@ -16,7 +16,7 @@ services:
 
   db:
     build: .docker/postgres
-    container_name: store-api-db
+    container_name: invoices-api-db
     restart: always
     tty: true
     volumes:
@@ -26,16 +26,16 @@ services:
     #  - 5432:5432
     environment:
       - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=store
+      - POSTGRES_DB=invoice
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: store-api-pgadmin
+    container_name: invoices-api-pgadmin
     tty: true
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@user.com
       - PGADMIN_DEFAULT_PASSWORD=123456
     ports:
-      - 9001:80
+      - 9002:80
     depends_on:
       - db
