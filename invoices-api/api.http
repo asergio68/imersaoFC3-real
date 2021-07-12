@@ -13,3 +13,9 @@ Content-Type: application/json
 
 ###
 GET http://localhost:3002/credit-cards/1234567890123456/invoices
+
+###
+GET http://localhost:3002/credit-cards/6543210987654321/invoices
+
+###
+GET http://localhost:3002/credit-cards/invoices
