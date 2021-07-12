@@ -31,6 +31,8 @@ export class PaymentService implements OnModuleInit {
   }
 
   async payment(data: PaymentData) {
+    console.log('grpc service');
+    console.log(data);
     try {
       return await this.paymentGrpcService.payment(data).toPromise();
     } catch (e) {

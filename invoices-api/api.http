@@ -11,7 +11,5 @@ Content-Type: application/json
     "number": "1234567890123456"
 }
 
-## 1111111111111103
-
 ###
-GET http://localhost:3002/credit-cards/1111111111111103/invoices
+GET http://localhost:3002/credit-cards/1234567890123456/invoices
