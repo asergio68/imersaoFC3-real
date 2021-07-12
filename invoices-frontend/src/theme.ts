@@ -1,15 +1,14 @@
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 import { createTheme } from "@material-ui/core";
-import { red } from "@material-ui/core/colors";
 
 const palette: PaletteOptions = {
-  type: "dark",
+  type: "light",
   primary: {
-    main: red[800],
-    contrastText: "#FFFFFF",
+    main: "#242526",
+    contrastText: "#FFCD00",
   },
   background: {
-    default: "#242526",
+    default: "#FFCD00",
   },
 };
 

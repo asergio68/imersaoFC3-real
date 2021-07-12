@@ -78,7 +78,7 @@ const InvoicesListPage: NextPage<InvoicesListPageProps> = ({ creditCards }) => {
             {invoices.map((invoice, key) => (
               <ListItem key={key} alignItems="flex-start">
                 <ListItemText
-                  primary={format(parseISO(invoice.payment_date), "dd/MM/yyyy")}
+                  primary={format(parseISO(invoice.payment_date), "dd/MM/yyyy HH:mm")}
                   secondary={invoice.store}
                 />
                 <ListItemSecondaryAction>
