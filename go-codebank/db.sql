@@ -20,3 +20,11 @@ CREATE TABLE transactions (
 	created_at timestamp not null,
     PRIMARY KEY (id)
 );
+
+insert into credit_cards values (
+    "010c1bff-70eb-4509-8539-304b3013d87c",
+    "Sergio Ribeiro",
+    "1234567890123456",
+    "09", "2029", "123",
+    0, 28000
+)
