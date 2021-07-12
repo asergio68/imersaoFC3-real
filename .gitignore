@@ -1,3 +1,5 @@
 .idea
 .pgdata
 .env
+.history/
+es01/
