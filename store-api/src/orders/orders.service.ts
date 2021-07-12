@@ -18,38 +18,24 @@ export class OrdersService {
   ) {}
 
   async create(createOrderDto: CreateOrderDto) {
-    console.log('service...');
-    console.log(createOrderDto);
-
     const order = this.orderRepo.create(createOrderDto);
-    console.log('service 1...');
-
     const products = await this.productRepo.find({
       where: {
         id: In(order.items.map((item) => item.product_id)),
       },
     });
-
-    console.log('service 2...');
-
     order.items.forEach((item) => {
       const product = products.find(
         (product) => product.id === item.product_id,
       );
       item.price = product.price;
     });
-
-    console.log('service 3...');
-
     const queryRunner = this.connection.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
       const newOrder = await queryRunner.manager.save(order);
-
-      console.log('service 4...');
-
       await this.paymentService.payment({
         creditCard: {
           name: order.credit_card.name,
@@ -62,9 +48,6 @@ export class OrdersService {
         store: process.env.STORE_NAME,
         description: `Produtos: ${products.map((p) => p.name).join(', ')}`,
       });
-
-      console.log('service 5...');
-
       await queryRunner.manager.update(
         Order,
         { id: newOrder.id },
@@ -73,14 +56,8 @@ export class OrdersService {
         },
       );
       await queryRunner.commitTransaction();
-
-      console.log('service 6...');
-
       return this.orderRepo.findOne(newOrder.id, { relations: ['items'] });
     } catch (e) {
-
-      console.log('service 7...');
-
       await queryRunner.rollbackTransaction();
       console.log(e.name);
       throw e;
